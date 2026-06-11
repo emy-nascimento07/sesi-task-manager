@@ -13,7 +13,7 @@ export default function Home() {
       titulo: "Prova de PPDM", 
       concluida: false, 
       data: "11/06/2026", 
-      categoria: "Atividade" 
+      categoria: "Prova" 
     },
     {
       id: "2", 
