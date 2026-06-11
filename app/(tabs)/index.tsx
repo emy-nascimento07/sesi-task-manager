@@ -6,7 +6,7 @@ import ItemTarefa from "../components/ItemTarefa";
 import { Tarefa } from "../types/Tarefa";
 
 export default function Home() {
-  // Inicializa o useState direto com as duas tarefas padrões
+  // Início com 2 tarefas padrões
   const [tarefas, setTarefas] = useState<Tarefa[]>([
     { 
       id: "1", 
@@ -14,7 +14,7 @@ export default function Home() {
       concluida: false, 
       data: "11/06/2026", 
       categoria: "Atividade" 
-    }, // <-- Vírgula adicionada aqui
+    },
     {
       id: "2", 
       titulo: "Entrega de BCD", 
@@ -52,8 +52,10 @@ export default function Home() {
     <View style={styles.container}>
       <Image style={styles.logo} source={require("../../assets/images/logoSesi.jpg")} />
       
+      <Text style={styles.appSubtitle}>SESI Task Manager</Text>
+      
       <FlatList
-        data={tarefas} // <-- Agora passa apenas o estado de tarefas limpo
+        data={tarefas}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <View style={styles.header}>
@@ -84,13 +86,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: "#f5f5f5",
   },
   logo: {
     width: 150,
     height: 60,
     resizeMode: "contain",
     alignSelf: "center",
-    marginVertical: 10,
+    marginTop: 10,
+  },
+  appSubtitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#ff0000", 
+    textAlign: "center",
+    marginBottom: 20,
+    letterSpacing: 1, 
   },
   header: {
     marginBottom: 16,
@@ -98,6 +109,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "bold",
+    color: "#333",
     marginBottom: 12,
   },
   row: {
