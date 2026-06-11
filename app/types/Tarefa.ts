@@ -4,4 +4,5 @@ export type Tarefa = {
     concluida: boolean;
     data: string;
     categoria: string;
+    prazo: string;
 }

@@ -1,59 +1,134 @@
-import { StyleSheet, Text, View, Button } from "react-native";
-import { useRouter } from "expo-router"; // <-- Corrigido aqui: mudou de Router para useRouter
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function About() {
-  const router = useRouter(); // <-- Agora o React Native vai reconhecer essa função perfeitamente
+  const router = useRouter();
     
   return (
-    <View style={styles.container}>
-      <Text style={styles.appName}>Sesi Task Manager</Text>
-
-      <Text style={styles.studentName}>Emilly Raissa Nascimento</Text>
-      <Text style={styles.text}>
-        Curso: Técnico em Desenvolvimento de Sistemas
-      </Text>
-      <Text style={styles.text}>Disciplina: PPDM</Text>
-
-      <Text style={styles.description}>
-        Aplicativo desenvolvido para um desafio para visualizar, detalhar e
-        interagir com uma lista de tarefas.
-      </Text>
-
-      <View style={styles.buttonContainer}>
-        <Button title="Voltar" onPress={() => router.back()} />
+    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+      
+      <View style={styles.profileContainer}>
+        <View style={styles.photoFrame}>
+          {/* <Image 
+            source={require("../../assets/images/emilly.jpg")} // Lembre de salvar sua foto com esse nome em assets/images
+            style={styles.profilePhoto} 
+          /> */}
+        </View>
+        <Text style={styles.studentName}>Emilly Raissa Nascimento</Text>
+        <Text style={styles.studentRole}>Estudante de Tecnologia</Text>
       </View>
-    </View>
+
+      <View style={styles.card}>
+        <View style={styles.infoRow}>
+          <Ionicons name="school-outline" size={18} color="#96B6C5" />
+          <Text style={styles.infoText}>Técnico em Desenvolvimento de Sistemas</Text>
+        </View>
+        <View style={styles.infoRow}>
+          <Ionicons name="book-outline" size={18} color="#96B6C5" />
+          <Text style={styles.infoText}>Disciplina: PPDM</Text>
+        </View>
+      </View>
+
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Sesi Task Manager</Text>
+        <Text style={styles.description}>
+          Um espaço calmo e minimalista projetado para organizar sua rotina diária, 
+          permitindo visualizar e interagir com seus compromissos sem pressa e sem estresse.
+        </Text>
+      </View>
+
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <Text style={styles.backButtonText}>Voltar ao Início</Text>
+      </TouchableOpacity>
+      
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
+    backgroundColor: "#FBF7F4",
     padding: 24,
     justifyContent: "center",
   },
-  appName: {
-    fontSize: 26,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 24,
+  profileContainer: {
+    alignItems: "center",
+    marginBottom: 28,
+  },
+  photoFrame: {
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    backgroundColor: "#FFF",
+    padding: 4,
+    borderWidth: 1,
+    borderColor: "#EFE9E1",
+    marginBottom: 14,
+  },
+  profilePhoto: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 55,
   },
   studentName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#007AFF",
-    marginBottom: 8,
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#4A4744",
+    textAlign: "center",
   },
-  text: {
+  studentRole: {
     fontSize: 14,
-    marginBottom: 4,
+    color: "#8A8782",
+    marginTop: 2,
+  },
+  card: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 14,
+    shadowColor: "#5C554E",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.03,
+    shadowRadius: 10,
+    elevation: 2,
+  },
+  cardTitle: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#96B6C5",
+    textTransform: "uppercase",
+    letterSpacing: 0.8,
+    marginBottom: 6,
+  },
+  infoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginVertical: 6,
+  },
+  infoText: {
+    fontSize: 14,
+    color: "#4A4744",
+    flex: 1,
   },
   description: {
     fontSize: 14,
-    marginTop: 20,
-    textAlign: "center",
+    color: "#6E6A64",
+    lineHeight: 22,
   },
-  buttonContainer: {
-    marginTop: 24,
+  backButton: {
+    backgroundColor: "#96B6C5",
+    paddingVertical: 14,
+    borderRadius: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  backButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
