@@ -13,6 +13,7 @@ const categorias = [
   { label: "Prova", value: "Prova" },
   { label: "Atividade", value: "Atividade" },
   { label: "Estudo", value: "Estudo" },
+  { label: "Evento", value: "Evento" },
 ];
 
 type InputTarefaProps = {
