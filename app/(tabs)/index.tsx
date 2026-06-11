@@ -1,98 +1,111 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { useState } from "react";
+import { FlatList, StyleSheet, Text, View, Image } from "react-native";
+import { useRouter } from "expo-router";
+import InputTarefa from "../components/InputTarefa";
+import ItemTarefa from "../components/ItemTarefa";
+import { Tarefa } from "../types/Tarefa";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+export default function Home() {
+  // Inicializa o useState direto com as duas tarefas padrões
+  const [tarefas, setTarefas] = useState<Tarefa[]>([
+    { 
+      id: "1", 
+      titulo: "Prova de PPDM", 
+      concluida: false, 
+      data: "11/06/2026", 
+      categoria: "Atividade" 
+    }, // <-- Vírgula adicionada aqui
+    {
+      id: "2", 
+      titulo: "Entrega de BCD", 
+      concluida: false, 
+      data: "11/06/2026", 
+      categoria: "Atividade"
+    }
+  ]);
 
-export default function HomeScreen() {
+  const router = useRouter();
+
+  // Função para adicionar tarefa
+  const handleAddTask = (titulo: string, categoria: string ) => {
+    const novaTarefa: Tarefa = {
+      id: Date.now().toString(),
+      titulo: titulo,
+      concluida: false,
+      data: new Date().toLocaleDateString("pt-BR") + " às " + new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }),
+      categoria,
+    };
+    setTarefas([...tarefas, novaTarefa]);
+  };
+
+  // Função para "concluir" tarefa
+  const handleToggleTask = (id: string) => {
+    setTarefas(tarefas.map((t) => t.id === id ? { ...t, concluida: !t.concluida } : t));
+  };
+
+  // Função para deletar tarefa
+  const handleDeleteTask = (id: string) => {
+    setTarefas(tarefas.filter((t) => t.id !== id));
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
+    <View style={styles.container}>
+      <Image style={styles.logo} source={require("../../assets/images/logoSesi.jpg")} />
+      
+      <FlatList
+        data={tarefas} // <-- Agora passa apenas o estado de tarefas limpo
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={
+          <View style={styles.header}>
+            <Text style={styles.title}>Minhas Tarefas</Text>
+            <InputTarefa onAddTask={handleAddTask} />
+          </View>
+        }
+        renderItem={({ item }) => (
+          <View style={styles.row}>
+            <ItemTarefa
+              tarefa={item}
+              onToggle={handleToggleTask}
+              onDelete={handleDeleteTask}
+              onPressDetail={() => router.push({
+                pathname: `/details/${item.id}`,
+                params: { titulo: item.titulo, categoria: item.categoria, data: item.data }
+              })}
             />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
-
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+          </View>
+        )}
+        ListEmptyComponent={<Text style={styles.empty}>Nenhuma tarefa ainda. 📝</Text>}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    padding: 20,
   },
-  stepContainer: {
-    gap: 8,
+  logo: {
+    width: 150,
+    height: 60,
+    resizeMode: "contain",
+    alignSelf: "center",
+    marginVertical: 10,
+  },
+  header: {
+    marginBottom: 16,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 12,
+  },
+  row: {
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  empty: {
+    textAlign: "center",
+    color: "#888",
+    marginTop: 20,
   },
 });
